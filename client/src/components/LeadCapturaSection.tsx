@@ -3,6 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import FadeInWhenVisible from "./FadeInWhenVisible";
 
+const API_URL = import.meta.env.VITE_API_URL ?? "";
+
 // ─── Palette: neutral editorial ──────────────────────────────────────────────
 const SAND       = "#E8E3DC";
 const CARD_BG    = "#FDFCFA";
@@ -275,7 +277,7 @@ export default function LeadCapturaSection() {
     setLoading(true);
     setApiErr("");
     try {
-      const res = await fetch("/api/leads", {
+      const res = await fetch(`${API_URL}/api/leads`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

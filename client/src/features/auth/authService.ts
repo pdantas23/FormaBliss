@@ -28,6 +28,10 @@ async function safeReadJson(response: Response) {
   const contentType = response.headers.get("content-type") || "";
 
   if (!contentType.includes("application/json")) {
+    // Resposta não-JSON em rota de erro: não lança, retorna objeto de erro estruturado
+    if (!response.ok) {
+      return { error: `HTTP ${response.status}`, authenticated: false };
+    }
     const text = await response.text();
     throw new Error(
       `Resposta inválida do servidor: esperado JSON, recebido "${text.slice(0, 80)}"`
@@ -98,17 +102,15 @@ export async function getCurrentSession() {
     credentials: "include",
   });
 
+  // 401 = usuário não autenticado (convidado) — não é um erro, não polui o console
+  if (response.status === 401) {
+    return { session: null, error: null };
+  }
+
   const data: MeResponse = await safeReadJson(response);
 
   if (!response.ok || !data.authenticated || !data.user) {
-    return {
-      session: null,
-      error: data.error
-        ? {
-            message: data.error,
-          }
-        : null,
-    };
+    return { session: null, error: null };
   }
 
   return {
@@ -125,6 +127,11 @@ export async function getUserProfile(): Promise<UserProfile | null> {
     method: "GET",
     credentials: "include",
   });
+
+  // 401 = não autenticado, retorna null sem lançar erro
+  if (response.status === 401) {
+    return null;
+  }
 
   const data: MeResponse = await safeReadJson(response);
 

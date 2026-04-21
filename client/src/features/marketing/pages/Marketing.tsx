@@ -3,6 +3,8 @@ import DropdownCustom from "@/components/ui/DropdownCustom";
 import LeadModal from "@/components/ui/LeadModal";
 import { useAuth } from "@/features/auth/useAuth";
 import type { Lead, LeadEstagio, TipoEvento } from "@shared/const";
+
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 import { LEAD_ESTAGIO_LABELS, LEAD_ESTAGIO_VALUES, TIPO_EVENTO_VALUES } from "@shared/const";
 import { Eye, MessageCircle, Search, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -102,7 +104,7 @@ export default function Marketing() {
       if (filterDateStart) params.append("data_inicio", filterDateStart);
       if (filterDateEnd) params.append("data_fim", filterDateEnd);
 
-      const url = `/api/leads${params.toString() ? "?" + params.toString() : ""}`;
+      const url = `${API_URL}/api/leads${params.toString() ? "?" + params.toString() : ""}`;
       const res = await fetch(url, { credentials: "include" });
 
       if (!res.ok) {
