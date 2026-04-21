@@ -354,26 +354,26 @@ export default function Home() {
       </section>
 
       {/*Transicao*/}
-      <div className="w-full overflow-hidden leading-[0] bg-[#26C2B9]"> {/* Cor da section 2 */}
-        <svg 
-          viewBox="0 0 1200 120" 
-          preserveAspectRatio="none" 
+      <div className="w-full overflow-hidden leading-[0] bg-[#26C2B9]" style={{ marginTop: "-1px", transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}> {/* Cor da section 2 */}
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
           className="relative block w-full h-[60px]"
-          style={{ fill: FORMA_PURPLE }} /* Cor da section 1 */
+          style={{ fill: FORMA_PURPLE, display: "block" }} /* Cor da section 1 */
         >
           <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.32,37.5,110.12,32.07,230,22,332.18-20,93.66-38.49,170.81-68.86,284.7-61.12V0Z"></path>
         </svg>
       </div>
-      
+
       <EventCardsSection />
 
       {/* Transicao */}
-      <div className="w-full overflow-hidden leading-[0]" style={{ fill: FORMA_PURPLE }}> {/* Cor da section 2 */}
-        <svg 
-          viewBox="0 0 1200 120" 
-          preserveAspectRatio="none" 
+      <div className="w-full overflow-hidden leading-[0]" style={{ marginTop: "-1px", transform: "translateZ(0)", WebkitTransform: "translateZ(0)", backgroundColor: FORMA_TEAL }}> {/* Cor da section 2 */}
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
           className="relative block w-full h-[60px]"
-          style={{ fill: FORMA_TEAL }} /* Cor da section 1 */
+          style={{ fill: FORMA_PURPLE, display: "block" }} /* Cor da section 1 */
         >
           <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.32,37.5,110.12,32.07,230,22,332.18-20,93.66-38.49,170.81-68.86,284.7-61.12V0Z"></path>
         </svg>
@@ -425,12 +425,12 @@ export default function Home() {
       </section>
 
       {/*Transicao*/}
-      <div className="w-full overflow-hidden leading-[0] bg-[#26C2B9]"> {/* Cor da section 2 */}
-        <svg 
-          viewBox="0 0 1200 120" 
-          preserveAspectRatio="none" 
+      <div className="w-full overflow-hidden leading-[0] bg-[#26C2B9]" style={{ marginTop: "-1px", transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}> {/* Cor da section 2 */}
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
           className="relative block w-full h-[60px]"
-          style={{ fill: FORMA_PURPLE }} /* Cor da section 1 */
+          style={{ fill: FORMA_PURPLE, display: "block" }} /* Cor da section 1 */
         >
           <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.32,37.5,110.12,32.07,230,22,332.18-20,93.66-38.49,170.81-68.86,284.7-61.12V0Z"></path>
         </svg>

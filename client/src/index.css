@@ -115,14 +115,17 @@
 }
 
 /* ────────────────────────────────────────────────────────────────────────────── */
-/* Section Transitions - Elimina linhas residuais no Safari                      */
+/* Section + Wave Dividers - Elimina linhas residuais no Safari                  */
+/* Causa: sub-pixel rounding entre elementos block adjacentes no WebKit          */
+/* Fix: margem negativa de 1px + GPU layer via translateZ(0)                     */
 /* ────────────────────────────────────────────────────────────────────────────── */
 section {
   /* Negative margins eliminam gaps de sub-pixel */
-  margin: -1px 0 0 0;
+  margin-top: -1px;
 
   /* Transform para GPU rendering */
   transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 
   /* Backface hidden durante transições */
   -webkit-backface-visibility: hidden;
@@ -130,6 +133,22 @@ section {
 
   /* Força o Safari a renderizar com antialiasing */
   will-change: transform;
+}
+
+/* SVG wave dividers entre sections (ex: Home.tsx) */
+/* Estes são <div> com overflow:hidden, não sections — precisam do mesmo fix */
+.w-full.overflow-hidden.leading-\[0\] {
+  margin-top: -1px;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* SVG inline nunca deve ter espaçamento extra de linha */
+svg {
+  display: block;
+  vertical-align: bottom;
 }
 
 section[style*="transition"] {

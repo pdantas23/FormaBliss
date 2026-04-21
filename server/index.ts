@@ -9,12 +9,22 @@ import leadsRouter from "./routes/leadsRoutes";
 const app = express();
 
 // ─── CORS com Suporte a Múltiplas Origens ─────────────────────────────────
-// CORS_ORIGIN pode ser uma string com múltiplas URLs separadas por vírgula
+// CORS_ORIGIN deve conter a(s) URL(s) exata(s) do frontend, separadas por vírgula.
+// Exemplo Easypanel: CORS_ORIGIN=https://royalhubacademy.com,https://www.royalhubacademy.com
+//
+// IMPORTANTE: Esta URL deve ser o frontend (Hostinger/Vercel),
+//             NÃO a URL do Supabase (que é um serviço separado).
 function parseCORSOrigins(): string[] {
   const raw = process.env.CORS_ORIGIN;
+  const isProduction = process.env.NODE_ENV === "production";
 
   if (!raw || raw.trim().length === 0) {
-    console.warn("[CORS] CORS_ORIGIN não definido, usando padrão: http://localhost:3000");
+    if (isProduction) {
+      console.error("[CORS] ⚠️  CORS_ORIGIN não definido em produção — requisições cross-origin serão bloqueadas!");
+      console.error("[CORS]     Configure CORS_ORIGIN no EasyPanel com a URL do seu frontend.");
+    } else {
+      console.warn("[CORS] CORS_ORIGIN não definido, usando padrão: http://localhost:3000");
+    }
     return ["http://localhost:3000"];
   }
 
@@ -43,7 +53,7 @@ function parseCORSOrigins(): string[] {
     return ["http://localhost:3000"];
   }
 
-  console.log(`[CORS] Origens carregadas: ${validOrigins.join(", ")}`);
+  console.log(`[CORS] Origens permitidas: ${validOrigins.join(", ")}`);
   return validOrigins;
 }
 
