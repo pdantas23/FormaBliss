@@ -20,8 +20,8 @@
   html {
     margin: 0;
     padding: 0;
-    overscroll-behavior-y: none;
     background-color: #080612;
+    overflow-y: scroll; /* Allow scroll */
   }
 
   body {
@@ -32,7 +32,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    overscroll-behavior-y: none;
+    overflow-y: auto; /* Allow scroll */
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -42,6 +42,7 @@
   #root {
     display: flex;
     flex-direction: column;
+    width: 100%;
     min-height: 100vh;
   }
 }
@@ -102,4 +103,94 @@
     0%, 100% { box-shadow: 0 0 0 0   rgba(37,211,102,0.42), 0 8px 28px rgba(37,211,102,0.42); }
     50%       { box-shadow: 0 0 0 10px rgba(37,211,102,0),   0 8px 32px rgba(37,211,102,0.55); }
   }
+}
+
+/* ────────────────────────────────────────────────────────────────────────────── */
+/* Safari Sub-Pixel Rendering Fix - Global                                       */
+/* ────────────────────────────────────────────────────────────────────────────── */
+* {
+  /* Garante que a GPU renderiza sem gaps de sub-pixel */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────── */
+/* Section Transitions - Elimina linhas residuais no Safari                      */
+/* ────────────────────────────────────────────────────────────────────────────── */
+section {
+  /* Negative margins eliminam gaps de sub-pixel */
+  margin: -1px 0 0 0;
+
+  /* Transform para GPU rendering */
+  transform: translateZ(0);
+
+  /* Backface hidden durante transições */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+
+  /* Força o Safari a renderizar com antialiasing */
+  will-change: transform;
+}
+
+section[style*="transition"] {
+  /* Durante transições, garante GPU rendering */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* ────────────────────────────────────────────────────────────────────────────── */
+/* Transitions - Safari 3D Transform Fix                                         */
+/* ────────────────────────────────────────────────────────────────────────────── */
+[style*="transition-duration"],
+[style*="animation"] {
+  /* Força Safari a renderizar corretamente durante transições */
+  -webkit-perspective: 1000;
+  perspective: 1000;
+
+  /* GPU acceleration */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* Backface visibility para smooth animation */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* ────────────────────────────────────────────────────────────────────────────── */
+/* DomeGallery Specific - 3D Transforms                                          */
+/* ────────────────────────────────────────────────────────────────────────────── */
+[class*="sphere"],
+[class*="dome"],
+[class*="gallery"] {
+  /* Margin negativa para eliminar gaps */
+  margin: -1px 0 0 0;
+
+  /* GPU rendering para 3D transforms */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+
+  /* Suporte WebKit */
+  -webkit-perspective: 1000;
+  perspective: 1000;
+
+  /* Smooth backface during rotation */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Durante animações 3D, garante zero gaps */
+[style*="transform: "] {
+  margin: -1px 0 0 0 !important;
+  transform: translateZ(0);
+}
+
+/* Overlays e modais também precisam de -1px margin */
+[role="dialog"],
+.modal,
+.overlay,
+.scrim {
+  margin: -1px 0 0 0;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }

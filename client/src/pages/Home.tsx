@@ -4,8 +4,7 @@ import { Briefcase, GraduationCap, Instagram, MessageCircle } from "lucide-react
 import { useState } from "react";
 
 const WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER ?? "";
-const MAPS_URL = "https://maps.google.com/?q=Av.+Lindolfo+Monteiro,+541";
-
+const MAPS_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3974.2533814838634!2d-42.7915591!3d-5.0625345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x78e38d6174a88f7%3A0xc3d3393967406a44!2sAv.%20Lindolfo%20Monteiro%2C%20541%20-%20F%C3%A1tima%2C%20Teresina%20-%20PI%2C%2064049-440!5e0!3m2!1spt-BR!2sbr!4v1713650000000!5m2!1spt-BR!2sbr";
 const FORMA_PURPLE = "#6019D2";    // Roxo Imperial (Base)
 const FORMA_TEAL = "#26C2B9";      // Verde Água (Destaque/Acento)
 const FORMA_DARK = "#0B0819";      // Fundo Ultra Dark
@@ -17,9 +16,6 @@ function wa(msg: string) {
     "noopener,noreferrer"
   );
 }
-
-// ─── Design tokens ─────────────────────────────────────────────────────────────
-const BORDER_GOLD = "rgb(191, 161, 111)";
 
 // ─── Cards de navegação de eventos ─────────────────────────────────────────────
 const EVENT_CARDS = [
@@ -35,7 +31,7 @@ const EVENT_CARDS = [
     title: "Formaturas",
     label: "FORMATURAS",
     href: "/formatura",
-    src: "/photos/IMG_2.jpg",
+    src: "/photos/IMG_9.png",
     accent: FORMA_PURPLE,
   },
   {
@@ -449,7 +445,7 @@ export default function Home() {
           >
             <div className="flex flex-col justify-center gap-8 p-10 lg:p-16" style={{ backgroundColor: FORMA_PURPLE }}>
               <div>
-                <span className="text-xs font-bold tracking-widest uppercase mb-3 block" style={{ color: FORMA_TEAL }}>Sede Teresina</span>
+                <span className="text-xs font-bold tracking-widest uppercase mb-3 block" style={{ color: FORMA_TEAL }}>Nossa sede</span>
                 <h2 className="text-3xl font-bold" style={{ fontFamily: "'Poppins', sans-serif" }}>
                   Venha nos visitar
                 </h2>
@@ -462,7 +458,7 @@ export default function Home() {
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
-                  className="px-8 py-4 rounded-xl font-bold transition-all hover:bg-teal-500 hover:text-white"
+                  className="px-8 py-4 rounded-xl font-bold transition-all hover:bg-teal-500 hover:text-white cursor-pointer"
                   style={{ backgroundColor: "transparent", border: `2px solid ${FORMA_TEAL}`, color: FORMA_TEAL }}
                   onClick={() => wa("Olá! Gostaria de agendar uma visita.")}>
                   Agendar Visita
@@ -472,7 +468,7 @@ export default function Home() {
 
             <div className="h-80 lg:h-auto min-h-[400px]">
               <iframe
-                src={`https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3974.246476104443!2d-42.7885233!3d-5.0635465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x78e38d0e7f777777%3A0x7777777777777777!2sAv.%20Lindolfo%20Monteiro%2C%20541!5e0!3m2!1spt-BR!2sbr!4v1700000000000`}
+                src={MAPS_URL}
                 className="w-full h-full border-0"
                 loading="lazy"
               />

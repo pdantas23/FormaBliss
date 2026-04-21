@@ -6,6 +6,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
+import { useGlobalLoading } from "@/contexts/GlobalLoadingContext";
 
 const GOLD   = "#C5A059";
 const BORDER_GOLD = "rgba(197,160,89,0.18)";
@@ -39,12 +40,29 @@ interface NavbarProps {
 export default function Navbar({ theme = "dark" }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [location] = useLocation();
+  const { isLoading } = useGlobalLoading();
   const T = THEMES[theme];
 
+  // Only manage overflow if SplashScreen is not active
+  // This prevents Navbar from interfering with SplashScreen's scroll locking
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [menuOpen]);
+    if (isLoading) {
+      // SplashScreen is managing overflow - don't touch it
+      return;
+    }
+
+    // Only lock scroll if menu is open AND splash is not active
+    document.body.style.overflow = menuOpen ? "hidden" : "auto";
+    document.documentElement.style.overflow = menuOpen ? "hidden" : "auto";
+
+    return () => {
+      // Cleanup: restore to auto
+      if (!isLoading) {
+        document.body.style.overflow = "auto";
+        document.documentElement.style.overflow = "auto";
+      }
+    };
+  }, [menuOpen, isLoading]);
 
   useEffect(() => { setMenuOpen(false); }, [location]);
 

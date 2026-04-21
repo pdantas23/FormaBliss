@@ -56,9 +56,8 @@ const DEFAULT_IMAGES: ImageItem[] = [
     alt: 'Aula da Saudade'
   },
   {
-    src: '/photos/VIDEO_1.mp4',
-    alt: 'Geometric pattern',
-    isVideo: true
+    src: '/photos/IMG_9.png',
+    alt: 'Formatura'
   },
   {
     src: '/photos/IMG_6.jpg',

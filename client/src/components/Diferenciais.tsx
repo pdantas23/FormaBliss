@@ -40,19 +40,19 @@ const ITEMS = [
     slug:    "cenografia",
     eyebrow: "Design de Atmosfera",
     desc:    "Ambientes projetados para estimular os sentidos e a memória.",
-    img:     "https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=900&q=85",
+    img:     "/photos/cenario.jpg",
   },
-  {
-    slug:    "protocolo",
-    eyebrow: "Logística Invisível",
-    desc:    "Segurança e organização absoluta operando nos bastidores.",
-    img:     "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=85",
-  },
+{
+  slug:    "cerimonial",
+  eyebrow: "Experiência do Formando",
+  desc:    "Acolhimento impecável e condução de palco que transforma o rito em espetáculo.",
+  img:     "/photos/IMG_9.png", // Foto de um palco ou capelo
+},
   {
     slug:    "legado",
     eyebrow: "Arte em Registro",
     desc:    "A imortalização da sua conquista em cada detalhe visual.",
-    img:     "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=900&q=85",
+    img:     "/photos/IMG_8.png",
   },
 ];
 

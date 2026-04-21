@@ -10,11 +10,17 @@ const GlobalLoadingContext = createContext<GlobalLoadingContextType | undefined>
 export function GlobalLoadingProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Simulate initial load completion
+  // Initial load completion - aggressive timeout
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 800);
+      // CRITICAL: Force unlock scroll immediately
+      document.body.style.overflow = "unset";
+      document.documentElement.style.overflow = "unset";
+      // Also reset any overscroll behavior
+      document.body.style.overscrollBehavior = "unset";
+      document.documentElement.style.overscrollBehavior = "unset";
+    }, 600); // Reduced from 800ms for faster response
 
     return () => clearTimeout(timer);
   }, []);
