@@ -2,12 +2,12 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --omit=dev
+COPY server/package.json ./package.json
+
+RUN npm install --production
 
 COPY server/ ./server/
 COPY shared/ ./shared/
-COPY .env* ./
 
 EXPOSE 3001
 
