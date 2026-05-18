@@ -2,10 +2,10 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 
 // First 4 slides — prioritize the ones visible on initial render
 const PRELOAD_IMAGES = [
-  '/photos/IMG_1.jpg',
-  '/photos/IMG_2.jpg',
-  '/photos/IMG_3.jpg',
-  '/photos/IMG_4.jpg',
+  '/photos/IMG_1.webp',
+  '/photos/IMG_2.webp',
+  '/photos/IMG_3.webp',
+  '/photos/IMG_4.webp',
 ];
 
 interface GlobalLoadingContextType {
