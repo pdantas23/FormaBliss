@@ -92,7 +92,7 @@ export default function Corporativo() {
 
               {/* Botão 2: Página de Orçamentos (Projeto) */}
               <a
-                href="/#/eventos-exclusivos"
+                href="/eventos-exclusivos"
                 onClick={() => gtmPush("cta_click", { cta_label: "Solicitar Projeto", cta_location: "hero" })}
                 className="h-12 w-48 rounded-full border border-white/20 text-[11px] uppercase tracking-[0.2em] font-light hover:bg-white/5 transition-all flex items-center justify-center gap-2 cursor-pointer no-underline text-inherit"
               >
@@ -160,7 +160,7 @@ export default function Corporativo() {
             <button
               onClick={() => {
                 gtmPush("cta_click", { cta_label: "Solicitar Proposta", cta_location: "valores_section" });
-                window.location.href = '/#/eventos-exclusivos';
+                window.location.href = '/eventos-exclusivos';
               }}
               className="w-full sm:w-auto px-10 h-14 border border-zinc-800 text-zinc-300 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-white/5 transition-all duration-500 cursor-pointer"
             >
@@ -200,7 +200,7 @@ export default function Corporativo() {
             <button
               onClick={() => {
                 gtmPush("cta_click", { cta_label: "Solicitar Orçamento", cta_location: "final_cta" });
-                window.location.href = '/#/eventos-exclusivos';
+                window.location.href = '/eventos-exclusivos';
               }}
               className="h-11 sm:h-14 px-4 sm:px-10 rounded-full bg-white text-black flex items-center justify-center gap-2 sm:gap-3 cursor-pointer"
             >

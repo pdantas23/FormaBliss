@@ -1,7 +1,6 @@
 import { AuthProvider } from "@/features/auth/AuthProvider";
 import ProtectedRoute from "@/features/auth/ProtectedRoute";
-import { Route, Router, Switch } from "wouter";
-import { useHashLocation } from "wouter/use-hash-location";
+import { Route, Switch } from "wouter";
 
 import Corporativo from "@/pages/Corporativo";
 import EventosExclusivos from "@/pages/EventosExclusivos";
@@ -20,39 +19,37 @@ export default function App() {
   return (
     <>
       <SplashScreen />
-      <Router hook={useHashLocation}>
-        <Switch>
-          <Route path="/"                   component={Home}             />
-          <Route path="/links"              component={LinkBio}          />
-          <Route path="/corporativo"        component={Corporativo}      />
-          <Route path="/formatura"          component={Formatura}        />
-          <Route path="/eventos-exclusivos" component={EventosExclusivos}/>
+      <Switch>
+        <Route path="/"                   component={Home}             />
+        <Route path="/links"              component={LinkBio}          />
+        <Route path="/corporativo"        component={Corporativo}      />
+        <Route path="/formatura"          component={Formatura}        />
+        <Route path="/eventos-exclusivos" component={EventosExclusivos}/>
 
-          <Route path="/login">
-            <AuthProvider>
-              <Login />
-            </AuthProvider>
-          </Route>
+        <Route path="/login">
+          <AuthProvider>
+            <Login />
+          </AuthProvider>
+        </Route>
 
-          <Route path="/comercial">
-            <AuthProvider>
-              <ProtectedRoute allowedRoles={["comercial"]}>
-                <Comercial />
-              </ProtectedRoute>
-            </AuthProvider>
-          </Route>
+        <Route path="/comercial">
+          <AuthProvider>
+            <ProtectedRoute allowedRoles={["comercial"]}>
+              <Comercial />
+            </ProtectedRoute>
+          </AuthProvider>
+        </Route>
 
-          <Route path="/marketing">
-            <AuthProvider>
-              <ProtectedRoute allowedRoles={["marketing"]}>
-                <Marketing />
-              </ProtectedRoute>
-            </AuthProvider>
-          </Route>
+        <Route path="/marketing">
+          <AuthProvider>
+            <ProtectedRoute allowedRoles={["marketing"]}>
+              <Marketing />
+            </ProtectedRoute>
+          </AuthProvider>
+        </Route>
 
-          <Route component={NotFound} />
-        </Switch>
-      </Router>
+        <Route component={NotFound} />
+      </Switch>
     </>
   );
 }
