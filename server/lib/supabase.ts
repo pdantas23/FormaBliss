@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import ws from "ws";
 
 function requireEnv(name: string): string {
   const value = process.env[name];
@@ -16,6 +17,7 @@ const BASE_AUTH_OPTIONS = {
     autoRefreshToken: false,
     detectSessionInUrl: false,
   },
+  realtime: { transport: ws as any },
 } as const;
 
 export function createSupabaseServerClient() {
