@@ -334,7 +334,7 @@ export default function Home() {
 
             <a
               id="hero-cta-orcamento"
-              href="/eventos-exclusivos"
+              href="/#/eventos-exclusivos"
               onClick={() => gtmPush("cta_click", { cta_label: "Solicitar orçamento", cta_location: "hero" })}
               className="font-medium text-center transition-all hover:bg-white/10"
               style={{ 
