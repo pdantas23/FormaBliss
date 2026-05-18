@@ -5,17 +5,19 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { GlobalLoadingProvider } from "@/contexts/GlobalLoadingContext";
 import "./index.css";
 
-// Normaliza rotas sem hash → /#/rota antes de renderizar
+// Normaliza URL sem hash → /#/rota sem disparar page reload
 if (!window.location.hash) {
-  window.location.replace("/#" + window.location.pathname + window.location.search);
-} else {
-  ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-      <GlobalLoadingProvider>
-        <ThemeProvider defaultTheme="light" switchable={false}>
-          <App />
-        </ThemeProvider>
-      </GlobalLoadingProvider>
-    </React.StrictMode>
-  );
+  window.location.hash = window.location.pathname === "/"
+    ? "/"
+    : window.location.pathname;
 }
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <GlobalLoadingProvider>
+      <ThemeProvider defaultTheme="light" switchable={false}>
+        <App />
+      </ThemeProvider>
+    </GlobalLoadingProvider>
+  </React.StrictMode>
+);
