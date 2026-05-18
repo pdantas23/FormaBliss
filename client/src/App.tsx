@@ -1,7 +1,6 @@
 import { AuthProvider } from "@/features/auth/AuthProvider";
 import ProtectedRoute from "@/features/auth/ProtectedRoute";
-import { Route, Router, Switch } from "wouter";
-import { useHashLocation } from "wouter/use-hash-location";
+import { Route, Switch } from "wouter";
 
 import Corporativo from "@/pages/Corporativo";
 import EventosExclusivos from "@/pages/EventosExclusivos";
@@ -23,7 +22,6 @@ export default function App() {
       <SplashScreen />
 
       {/* Routes */}
-      <Router hook={useHashLocation}>
       <Switch>
         {/* ── Públicas — sem AuthProvider, nenhuma chamada a /auth/me ───── */}
         <Route path="/"                   component={Home}             />
@@ -58,7 +56,6 @@ export default function App() {
         {/* ── 404 ───────────────────────────────────────────────────────── */}
         <Route component={NotFound} />
       </Switch>
-      </Router>
     </>
   );
 }

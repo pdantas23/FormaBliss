@@ -95,11 +95,10 @@ export default function Navbar({ theme = "dark" }: NavbarProps) {
           <div style={{ display: "flex", alignItems: "center", gap: "28px" }}>
             {NAV_LINKS.map(({ label, href }) => {
               const isActive = location === href || (href === "/" && location === "");
-              const hashHref = href === "/" ? "/" : `/#${href}`;
               return (
                 <a
                   key={href}
-                  href={hashHref}
+                  href={href}
                   style={{
                     fontFamily: "'Inter', sans-serif",
                     fontSize: "0.68rem",
@@ -232,11 +231,10 @@ export default function Navbar({ theme = "dark" }: NavbarProps) {
         <nav style={{ display: "flex", flexDirection: "column" }}>
           {NAV_LINKS.map(({ label, href }) => {
             const isActive = location === href || (href === "/" && location === "");
-            const hashHref = href === "/" ? "/" : `/#${href}`;
             return (
               <a
                 key={href}
-                href={hashHref}
+                href={href}
                 onClick={() => setMenuOpen(false)}
                 style={{
                   fontFamily: "'Poppins', sans-serif",
