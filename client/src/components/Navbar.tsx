@@ -83,10 +83,11 @@ export default function Navbar({ theme = "dark" }: NavbarProps) {
         >
           {/* Logotipo */}
           <div className="text-center">
-          <img 
-            src="/favicon.png" 
-            alt="Logo Forma Eventos" 
-            className="w-40 h-6 object-contain" 
+          <img
+            src="/favicon.png"
+            alt="Logo Forma Eventos"
+            className="w-40 h-6 object-contain"
+            style={{ filter: theme === "light" ? "invert(1)" : "none" }}
           />
         </div>
 

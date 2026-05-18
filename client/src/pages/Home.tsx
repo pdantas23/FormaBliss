@@ -289,7 +289,7 @@ export default function Home() {
         </div>
 
         {/* Conteúdo do Hero */}
-        <div className="relative z-20 flex flex-col items-center text-center px-6 pt-1 gap-6 max-w-4xl mx-auto">
+        <div className="relative z-20 flex flex-col items-center text-center px-6 pt-28 sm:pt-32 gap-6 max-w-4xl mx-auto">
           <h1
             className="text-5xl sm:text-6xl lg:text-8xl font-black leading-[1.05] tracking-tighter"
             style={{ fontFamily: "'Poppins', sans-serif" }}
