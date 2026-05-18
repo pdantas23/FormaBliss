@@ -10,7 +10,7 @@ const app = express();
 
 // ─── CORS com Suporte a Múltiplas Origens ─────────────────────────────────
 // CORS_ORIGIN deve conter a(s) URL(s) exata(s) do frontend, separadas por vírgula.
-// Exemplo Easypanel: CORS_ORIGIN=https://royalhubacademy.com,https://www.royalhubacademy.com
+// Exemplo Easypanel: CORS_ORIGIN=https://formaeventos.com.br,https://www.formaeventos.com.br
 //
 // IMPORTANTE: Esta URL deve ser o frontend (Hostinger/Vercel),
 //             NÃO a URL do Supabase (que é um serviço separado).

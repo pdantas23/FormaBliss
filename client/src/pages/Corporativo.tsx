@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
+import { gtmPush } from "@/lib/gtm";
 import { AnimatePresence, motion, useInView } from "framer-motion";
-import { Briefcase, ChevronLeft, ChevronRight, FileText, GraduationCap, Instagram, MessageCircle } from "lucide-react";
+import { Briefcase, FileText, GraduationCap, Instagram, MessageCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 // ─── Configurações de Estilo & Tokens ────────────────────────────────────────
@@ -14,19 +15,6 @@ const SLIDES = [
   { src: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1400&q=80", title: "Convenções de Liderança" },
   { src: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1400&q=80", title: "Jantares de Gala" },
   { src: "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=1400&q=80", title: "Lançamentos de Marca" },
-];
-
-const TESTIMONIALS = [
-  {
-    quote: "A Forma traduziu nossa visão estratégica em um evento impecável. O rigor logístico e o cuidado com a experiência dos convidados elevaram o patamar da nossa convenção anual.",
-    name: "Ricardo Oliveira",
-    role: "Diretor de Marketing · TechCorp"
-  },
-  {
-    quote: "Profissionalismo raro. Eles não apenas executam, eles fazem a curadoria de cada detalhe. O resultado final foi um reflexo fiel do nosso posicionamento premium.",
-    name: "Beatriz Helena",
-    role: "CEO · Studio Design"
-  }
 ];
 
 // ─── Componentes Auxiliares ──────────────────────────────────────────────────
@@ -47,14 +35,18 @@ function FadeUp({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
 
 export default function Corporativo() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
 
-  const openWA = () => {
-    const message = encodeURIComponent("Olá! Vim pelo site e gostaria de solicitar uma consultoria para um evento corporativo.");
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
+  const openWA = (location = "unknown") => {
+    const text = "Olá! Vim pelo site e gostaria de solicitar uma consultoria para um evento corporativo.";
+    gtmPush("whatsapp_click", { location, message: text });
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
   };
+
+  useEffect(() => {
+    gtmPush("page_view", { page: "corporativo" });
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -86,20 +78,22 @@ export default function Corporativo() {
 
             <div className="flex flex-row justify-center gap-4">
               {/* Botão 1: WhatsApp (Consultoria) */}
-              <button 
+              <button
                 onClick={() => {
-                  const msg = encodeURIComponent("Olá! Gostaria de uma consultoria para um evento corporativo.");
-                  window.open(`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}?text=${msg}`, "_blank");
+                  const msg = "Olá! Gostaria de uma consultoria para um evento corporativo.";
+                  gtmPush("whatsapp_click", { location: "hero_cta", message: msg });
+                  window.open(`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
                 }}
                 className="h-12 w-48 rounded-full bg-[#E5E7EB] text-[#0B0B0F] text-[11px] uppercase tracking-[0.2em] font-medium flex items-center justify-center gap-2 hover:bg-white transition-all cursor-pointer"
               >
-                <MessageCircle size={14} /> 
+                <MessageCircle size={14} />
                 Consultoria
               </button>
 
               {/* Botão 2: Página de Orçamentos (Projeto) */}
-              <a 
-                href="/eventos-exclusivos" 
+              <a
+                href="/#/eventos-exclusivos"
+                onClick={() => gtmPush("cta_click", { cta_label: "Solicitar Projeto", cta_location: "hero" })}
                 className="h-12 w-48 rounded-full border border-white/20 text-[11px] uppercase tracking-[0.2em] font-light hover:bg-white/5 transition-all flex items-center justify-center gap-2 cursor-pointer no-underline text-inherit"
               >
                 <FileText size={14} strokeWidth={1.5} /> 
@@ -156,67 +150,23 @@ export default function Corporativo() {
 
           {/* Botões de Ação */}
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
-            <button 
-              onClick={openWA}
+            <button
+              onClick={() => openWA("valores_section")}
               className="w-full sm:w-auto px-10 h-14 bg-[#D4AF37] text-black text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-[#b8952d] transition-all duration-500 cursor-pointer"
             >
               Agendar Consultoria
             </button>
 
-            <button 
-              onClick={() => window.location.href = '/formulario'}
+            <button
+              onClick={() => {
+                gtmPush("cta_click", { cta_label: "Solicitar Proposta", cta_location: "valores_section" });
+                window.location.href = '/#/eventos-exclusivos';
+              }}
               className="w-full sm:w-auto px-10 h-14 border border-zinc-800 text-zinc-300 text-[11px] font-bold uppercase tracking-[0.3em] hover:bg-white/5 transition-all duration-500 cursor-pointer"
             >
               Solicitar Proposta
             </button>
           </div>
-        </div>
-      </section>
-
-      {/* ════════════ DEPOIMENTOS ═══════════════════════════════ */}
-      <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <FadeUp>
-            <div className="border border-white/10 rounded-2xl p-10 sm:p-16 relative bg-white/[0.02]">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentTestimonial}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <p className="text-xl sm:text-2xl font-light italic leading-loose text-gray-300 mb-8">
-                    "{TESTIMONIALS[currentTestimonial].quote}"
-                  </p>
-                  <div>
-                    <span className="block text-[11px] uppercase tracking-[0.3em] font-medium" style={{ color: "rgb(191, 161, 111)" }}>
-                      {TESTIMONIALS[currentTestimonial].name}
-                    </span>
-                    <span className="block text-[10px] uppercase tracking-[0.1em] text-gray-600 mt-1">
-                      {TESTIMONIALS[currentTestimonial].role}
-                    </span>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Navegação Manual */}
-              <div className="flex gap-4 mt-12">
-                <button 
-                  onClick={() => setCurrentTestimonial(prev => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)}
-                  className="p-2 border border-white/10 rounded-full hover:bg-white/5 transition-colors"
-                >
-                  <ChevronLeft size={18} className="text-gray-500" />
-                </button>
-                <button 
-                  onClick={() => setCurrentTestimonial(prev => (prev + 1) % TESTIMONIALS.length)}
-                  className="p-2 border border-white/10 rounded-full hover:bg-white/5 transition-colors"
-                >
-                  <ChevronRight size={18} className="text-gray-500" />
-                </button>
-              </div>
-            </div>
-          </FadeUp>
         </div>
       </section>
 
@@ -237,7 +187,7 @@ export default function Corporativo() {
           <div className="flex flex-row justify-center items-center gap-2 sm:gap-4">
             {/* Botão 1: Falar com Consultor */}
             <button
-              onClick={openWA}
+              onClick={() => openWA("final_cta")}
               className="h-11 sm:h-14 px-4 sm:px-10 rounded-full bg-white/5 border border-white/10 hover:border-[rgba(191,161,111,0.5)] transition-all flex items-center justify-center gap-2 sm:gap-3 group cursor-pointer"
             >
               <MessageCircle size={16} className="sm:w-[18px] sm:h-[18px]" style={{ color: "rgb(191, 161, 111)" }} />
@@ -248,7 +198,10 @@ export default function Corporativo() {
 
             {/* Botão 2: Solicitar Orçamento */}
             <button
-              onClick={() => window.location.href = '/eventos-exclusivos'}
+              onClick={() => {
+                gtmPush("cta_click", { cta_label: "Solicitar Orçamento", cta_location: "final_cta" });
+                window.location.href = '/#/eventos-exclusivos';
+              }}
               className="h-11 sm:h-14 px-4 sm:px-10 rounded-full bg-white text-black flex items-center justify-center gap-2 sm:gap-3 cursor-pointer"
             >
               <FileText size={16} className="sm:w-[18px] sm:h-[18px]" />
@@ -301,7 +254,7 @@ export default function Corporativo() {
           {/* Marca Registrada e Copyright */}
           <div className="flex flex-col items-center gap-2">
             <p className="text-xs tracking-widest uppercase text-slate-400">
-              © {new Date().getFullYear()} Forma Eventos — Todos os direitos reservados.
+              © {new Date().getFullYear()} Forma Eventos
             </p>
           </div>
 

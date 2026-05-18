@@ -1,4 +1,5 @@
 // ─── LeadCapturaSection — Editorial Neutral Lead Capture ─────────────────────
+import { gtmPush } from "@/lib/gtm";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import FadeInWhenVisible from "./FadeInWhenVisible";
@@ -243,6 +244,7 @@ export default function LeadCapturaSection() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [apiErr,  setApiErr]  = useState("");
+  const formStarted = useRef(false);
 
   function setField(key: keyof FormState, value: string) {
     const next = key === "whatsapp" ? maskPhone(value) : value;
@@ -262,6 +264,11 @@ export default function LeadCapturaSection() {
 
   function handleFocus(key: keyof FormState) {
     setFocused(prev => ({ ...prev, [key]: true }));
+    if (!formStarted.current) {
+      formStarted.current = true;
+      gtmPush("form_start", { form_name: "lead_captura" });
+    }
+    gtmPush("form_field_focus", { form_name: "lead_captura", field_name: key });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -272,7 +279,16 @@ export default function LeadCapturaSection() {
     setTouched(allTouched);
     const errs = validate(form);
     setErrors(errs);
-    if (Object.keys(errs).length) return;
+
+    gtmPush("form_submit_attempt", { form_name: "lead_captura" });
+
+    if (Object.keys(errs).length) {
+      gtmPush("form_validation_error", {
+        form_name: "lead_captura",
+        fields: Object.keys(errs),
+      });
+      return;
+    }
 
     setLoading(true);
     setApiErr("");
@@ -289,12 +305,15 @@ export default function LeadCapturaSection() {
         }),
       });
       if (!res.ok) throw new Error();
+      gtmPush("form_submit_success", { form_name: "lead_captura", event_type: form.tipo });
       setForm(EMPTY);
       setTouched({});
       setErrors({});
       setFocused({});
+      formStarted.current = false;
       setSuccess(true);
     } catch {
+      gtmPush("form_submit_error", { form_name: "lead_captura", error: "api_error" });
       setApiErr("Algo deu errado. Por favor, tente novamente.");
     } finally {
       setLoading(false);

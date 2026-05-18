@@ -1,10 +1,13 @@
+import { AuthProvider } from "@/features/auth/AuthProvider";
 import ProtectedRoute from "@/features/auth/ProtectedRoute";
-import { Route, Switch } from "wouter";
+import { Route, Router, Switch } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 
 import Corporativo from "@/pages/Corporativo";
 import EventosExclusivos from "@/pages/EventosExclusivos";
 import Formatura from "@/pages/Formatura";
 import Home from "@/pages/Home";
+import LinkBio from "@/pages/LinkBio";
 import Login from "@/pages/Login";
 import NotFound from "@/pages/NotFound";
 
@@ -20,31 +23,42 @@ export default function App() {
       <SplashScreen />
 
       {/* Routes */}
+      <Router hook={useHashLocation}>
       <Switch>
-        {/* ── Públicas ──────────────────────────────────────────────────── */}
+        {/* ── Públicas — sem AuthProvider, nenhuma chamada a /auth/me ───── */}
         <Route path="/"                   component={Home}             />
+        <Route path="/links"              component={LinkBio}          />
         <Route path="/corporativo"        component={Corporativo}      />
         <Route path="/formatura"          component={Formatura}        />
         <Route path="/eventos-exclusivos" component={EventosExclusivos}/>
-        <Route path="/login"              component={Login}            />
 
-        {/* ── Dashboard Comercial ───────────────────────────────────────── */}
-        <Route path="/comercial">
-          <ProtectedRoute allowedRoles={["comercial"]}>
-            <Comercial />
-          </ProtectedRoute>
+        {/* ── Rotas autenticadas — AuthProvider carregado apenas aqui ───── */}
+        <Route path="/login">
+          <AuthProvider>
+            <Login />
+          </AuthProvider>
         </Route>
 
-        {/* ── Dashboard Marketing ───────────────────────────────────────── */}
+        <Route path="/comercial">
+          <AuthProvider>
+            <ProtectedRoute allowedRoles={["comercial"]}>
+              <Comercial />
+            </ProtectedRoute>
+          </AuthProvider>
+        </Route>
+
         <Route path="/marketing">
-          <ProtectedRoute allowedRoles={["marketing"]}>
-            <Marketing />
-          </ProtectedRoute>
+          <AuthProvider>
+            <ProtectedRoute allowedRoles={["marketing"]}>
+              <Marketing />
+            </ProtectedRoute>
+          </AuthProvider>
         </Route>
 
         {/* ── 404 ───────────────────────────────────────────────────────── */}
         <Route component={NotFound} />
       </Switch>
+      </Router>
     </>
   );
 }

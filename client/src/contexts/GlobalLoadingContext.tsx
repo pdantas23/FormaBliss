@@ -1,32 +1,59 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
+// First 4 slides — prioritize the ones visible on initial render
+const PRELOAD_IMAGES = [
+  '/photos/IMG_1.jpg',
+  '/photos/IMG_2.jpg',
+  '/photos/IMG_3.jpg',
+  '/photos/IMG_4.jpg',
+];
+
 interface GlobalLoadingContextType {
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
+  progress: number;
 }
 
 const GlobalLoadingContext = createContext<GlobalLoadingContextType | undefined>(undefined);
 
 export function GlobalLoadingProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
 
-  // Initial load completion - aggressive timeout
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      // CRITICAL: Force unlock scroll immediately
-      document.body.style.overflow = "unset";
-      document.documentElement.style.overflow = "unset";
-      // Also reset any overscroll behavior
-      document.body.style.overscrollBehavior = "unset";
-      document.documentElement.style.overscrollBehavior = "unset";
-    }, 600); // Reduced from 800ms for faster response
+    let loaded = 0;
+    const total = PRELOAD_IMAGES.length;
 
-    return () => clearTimeout(timer);
+    const imagePromises = PRELOAD_IMAGES.map(src =>
+      new Promise<void>(resolve => {
+        const img = new Image();
+        img.onload = img.onerror = () => {
+          loaded++;
+          setProgress(Math.round((loaded / total) * 100));
+          resolve();
+        };
+        img.src = src;
+      })
+    );
+
+    // Minimum display time so the splash doesn't flash
+    const minTimer = new Promise<void>(resolve => setTimeout(resolve, 500));
+
+    Promise.all([...imagePromises, minTimer]).then(() => {
+      setProgress(100);
+      // Small delay so the bar visually hits 100% before fading
+      setTimeout(() => {
+        setIsLoading(false);
+        document.body.style.overflow = "unset";
+        document.documentElement.style.overflow = "unset";
+        document.body.style.overscrollBehavior = "unset";
+        document.documentElement.style.overscrollBehavior = "unset";
+      }, 200);
+    });
   }, []);
 
   return (
-    <GlobalLoadingContext.Provider value={{ isLoading, setIsLoading }}>
+    <GlobalLoadingContext.Provider value={{ isLoading, setIsLoading, progress }}>
       {children}
     </GlobalLoadingContext.Provider>
   );

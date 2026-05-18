@@ -1,7 +1,8 @@
 import Navbar from "@/components/Navbar";
 import CircularTestimonials, { type TestimonialItem } from "@/components/ui/circular-testimonials";
+import { gtmPush } from "@/lib/gtm";
 import { Briefcase, GraduationCap, Instagram, MessageCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER ?? "";
 const MAPS_URL = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3974.2533814838634!2d-42.7915591!3d-5.0625345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x78e38d6174a88f7%3A0xc3d3393967406a44!2sAv.%20Lindolfo%20Monteiro%2C%20541%20-%20F%C3%A1tima%2C%20Teresina%20-%20PI%2C%2064049-440!5e0!3m2!1spt-BR!2sbr!4v1713650000000!5m2!1spt-BR!2sbr";
@@ -9,7 +10,8 @@ const FORMA_PURPLE = "#6019D2";    // Roxo Imperial (Base)
 const FORMA_TEAL = "#26C2B9";      // Verde Água (Destaque/Acento)
 const FORMA_DARK = "#0B0819";      // Fundo Ultra Dark
 
-function wa(msg: string) {
+function wa(msg: string, location = "unknown") {
+  gtmPush("whatsapp_click", { location, message: msg });
   window.open(
     `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`,
     "_blank",
@@ -31,14 +33,14 @@ const EVENT_CARDS = [
     title: "Formaturas",
     label: "FORMATURAS",
     href: "/formatura",
-    src: "/photos/IMG_9.png",
+    src: "/photos/IMG_7.webp",
     accent: FORMA_PURPLE,
   },
   {
     title: "Outras\nCelebrações",
     label: "CELEBRAÇÕES",
     href: "/eventos-exclusivos",
-    src: "/photos/IMG_3.jpg",
+    src: "/photos/IMG_2.webp",
     accent: FORMA_PURPLE,
   },
 ] as const;
@@ -57,6 +59,7 @@ function EventCard({
     <a
       href={href}
       className="event-card block relative overflow-hidden"
+      onClick={() => gtmPush("event_card_click", { card_title: title, card_href: href, card_label: label })}
       style={{
         borderRadius: "14px",
         border: hovered
@@ -254,7 +257,9 @@ function EventCardsSection() {
 
 // ─── Componente principal ──────────────────────────────────────────────────────
 export default function Home() {
-       // Fundo Ultra Dark
+  useEffect(() => {
+    gtmPush("page_view", { page: "home" });
+  }, []);
 
   return (
     <div
@@ -264,7 +269,7 @@ export default function Home() {
       <Navbar />
 
       {/* ═══════════ HERO ══════════════════════════════════════════════════════ */}
-      <section className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: "100vh" }}>
+      <section className="relative flex items-center justify-center overflow-hidden" style={{ minHeight: "80vh" }}>
 
         {/* Fotografia de fundo com overlay roxo profundo da marca */}
         <div
@@ -321,7 +326,7 @@ export default function Home() {
                 width: "100%",      // Mobile ocupa tudo
                 maxWidth: "300px"   // Desktop tamanho fixo igual
               }}
-              onClick={() => wa("Olá! Vim pelo site da Forma Eventos e gostaria de saber mais.")}
+              onClick={() => wa("Olá! Vim pelo site da Forma Eventos e gostaria de saber mais.", "hero_cta")}
             >
               <MessageCircle size={19} fill="currentColor" />
               <span className="whitespace-nowrap">Falar com um consultor</span>
@@ -329,7 +334,8 @@ export default function Home() {
 
             <a
               id="hero-cta-orcamento"
-              href="/eventos-exclusivos"
+              href="/#/eventos-exclusivos"
+              onClick={() => gtmPush("cta_click", { cta_label: "Solicitar orçamento", cta_location: "hero" })}
               className="font-medium text-center transition-all hover:bg-white/10"
               style={{ 
                 display: "flex", 
@@ -353,20 +359,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/*Transicao*/}
-      <div className="w-full overflow-hidden leading-[0] bg-[#26C2B9]" style={{ marginTop: "-1px", transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}> {/* Cor da section 2 */}
-        <svg
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-          className="relative block w-full h-[60px]"
-          style={{ fill: FORMA_PURPLE, display: "block" }} /* Cor da section 1 */
-        >
-          <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.32,37.5,110.12,32.07,230,22,332.18-20,93.66-38.49,170.81-68.86,284.7-61.12V0Z"></path>
-        </svg>
-      </div>
-
-      <EventCardsSection />
-
       {/* Transicao */}
       <div className="w-full overflow-hidden leading-[0]" style={{ marginTop: "-1px", transform: "translateZ(0)", WebkitTransform: "translateZ(0)", backgroundColor: FORMA_TEAL }}> {/* Cor da section 2 */}
         <svg
@@ -375,7 +367,21 @@ export default function Home() {
           className="relative block w-full h-[60px]"
           style={{ fill: FORMA_PURPLE, display: "block" }} /* Cor da section 1 */
         >
-          <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.32,37.5,110.12,32.07,230,22,332.18-20,93.66-38.49,170.81-68.86,284.7-61.12V0Z"></path>
+          <path d="M0,0 V20 C200,130 400,130 600,60 C800,-10 1000,-10 1200,30 V0 Z"></path>
+        </svg>
+      </div>
+
+      <EventCardsSection />
+
+      {/* Transicao */}
+      <div className="w-full overflow-hidden leading-[0]" style={{ marginTop: "-1px", transform: "translateZ(0)", WebkitTransform: "translateZ(0)", backgroundColor: FORMA_PURPLE }}> {/* Cor da section 2 */}
+        <svg
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+          className="relative block w-full h-[60px]"
+          style={{ fill: FORMA_TEAL, display: "block" }} /* Cor da section 1 */
+        >
+          <path d="M0,0 V20 C200,130 400,130 600,60 C800,-10 1000,-10 1200,30 V0 Z"></path>
         </svg>
       </div>
       
@@ -399,7 +405,7 @@ export default function Home() {
               style={{ minHeight: "500px"}}
             >
               <img
-                src="/photos/IMG_4.jpg"
+                src="/photos/IMG_4.webp"
                 alt="Equipe Forma Eventos"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
@@ -432,7 +438,7 @@ export default function Home() {
           className="relative block w-full h-[60px]"
           style={{ fill: FORMA_PURPLE, display: "block" }} /* Cor da section 1 */
         >
-          <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5,73.84-4.36,147.54,16.88,218.32,37.5,110.12,32.07,230,22,332.18-20,93.66-38.49,170.81-68.86,284.7-61.12V0Z"></path>
+          <path d="M0,0 V20 C200,130 400,130 600,60 C800,-10 1000,-10 1200,30 V0 Z"></path>
         </svg>
       </div>
 
@@ -460,7 +466,7 @@ export default function Home() {
                 <button
                   className="px-8 py-4 rounded-xl font-bold transition-all hover:bg-teal-500 hover:text-white cursor-pointer"
                   style={{ backgroundColor: "transparent", border: `2px solid ${FORMA_TEAL}`, color: FORMA_TEAL }}
-                  onClick={() => wa("Olá! Gostaria de agendar uma visita.")}>
+                  onClick={() => wa("Olá! Gostaria de agendar uma visita.", "localizacao_section")}>
                   Agendar Visita
                 </button>
               </div>
@@ -470,7 +476,6 @@ export default function Home() {
               <iframe
                 src={MAPS_URL}
                 className="w-full h-full border-0"
-                loading="lazy"
               />
             </div>
           </div>
@@ -519,7 +524,7 @@ export default function Home() {
           {/* Marca Registrada e Copyright */}
           <div className="flex flex-col items-center gap-2">
             <p className="text-xs tracking-widest uppercase text-slate-400">
-              © {new Date().getFullYear()} Forma Eventos — Todos os direitos reservados.
+              © {new Date().getFullYear()} Forma Eventos
             </p>
           </div>
 
@@ -528,7 +533,7 @@ export default function Home() {
     
       {/* ── WhatsApp flutuante — glow premium ─────────────────────────────── */}
       <button
-        onClick={() => wa("Olá! Vim pelo site da Forma Eventos e gostaria de mais informações.")}
+        onClick={() => wa("Olá! Vim pelo site da Forma Eventos e gostaria de mais informações.", "floating_button")}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110 wa-float"
         style={{
           backgroundColor: "#25D366",

@@ -28,31 +28,31 @@ const ITEMS = [
     slug:    "parcerias",
     eyebrow: "Cenários Icônicos",
     desc:    "Seleção rigorosa dos espaços mais prestigiados do país.",
-    img:     "/photos/IMG_3.jpg",
+    img:     "/photos/IMG_3.webp",
   },
   {
     slug:    "gastronomia",
     eyebrow: "Alta Gastronomia",
     desc:    "Menus exclusivos desenhados por grandes nomes da culinária.",
-    img:     "/photos/buffet.jpg",
+    img:     "/photos/buffet.webp",
   },
   {
     slug:    "cenografia",
     eyebrow: "Design de Atmosfera",
     desc:    "Ambientes projetados para estimular os sentidos e a memória.",
-    img:     "/photos/cenario.jpg",
+    img:     "/photos/cenario.webp",
   },
 {
   slug:    "cerimonial",
-  eyebrow: "Experiência do Formando",
+  eyebrow: "Experiência",
   desc:    "Acolhimento impecável e condução de palco que transforma o rito em espetáculo.",
-  img:     "/photos/IMG_9.png", // Foto de um palco ou capelo
+  img:     "/photos/IMG_8.webp", // Foto de um palco ou capelo
 },
   {
     slug:    "legado",
     eyebrow: "Arte em Registro",
     desc:    "A imortalização da sua conquista em cada detalhe visual.",
-    img:     "/photos/IMG_8.png",
+    img:     "/photos/IMG_5.webp",
   },
 ];
 

@@ -1,10 +1,13 @@
 import LeadCapturaSection from "@/components/LeadCapturaSection";
 import Navbar from "@/components/Navbar";
+import { gtmPush } from "@/lib/gtm";
 import { Briefcase, GraduationCap, Instagram } from "lucide-react";
+import { useEffect } from "react";
 
 const WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER ?? "";
 
-function wa(msg: string) {
+function wa(msg: string, location = "unknown") {
+  gtmPush("whatsapp_click", { location, message: msg });
   window.open(
     `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`,
     "_blank",
@@ -17,6 +20,10 @@ const LINEN    = "#F4F1EE";
 const CHARCOAL = "#2A2A2A";
 
 export default function EventosExclusivos() {
+  useEffect(() => {
+    gtmPush("page_view", { page: "eventos-exclusivos" });
+  }, []);
+
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -68,7 +75,7 @@ export default function EventosExclusivos() {
           {/* Marca Registrada e Copyright */}
           <div className="flex flex-col items-center gap-2">
             <p className="text-xs tracking-widest uppercase text-slate-400">
-              © {new Date().getFullYear()} Forma Eventos — Todos os direitos reservados.
+              © {new Date().getFullYear()} Forma Eventos
             </p>
           </div>
 
@@ -77,7 +84,7 @@ export default function EventosExclusivos() {
     
       {/* ── WhatsApp flutuante — glow premium ─────────────────────────────── */}
       <button
-        onClick={() => wa("Olá! Vim pelo site da Forma Eventos e gostaria de mais informações.")}
+        onClick={() => wa("Olá! Vim pelo site da Forma Eventos e gostaria de mais informações.", "floating_button")}
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center transition-transform duration-300 hover:scale-110 wa-float"
         style={{
           backgroundColor: "#25D366",

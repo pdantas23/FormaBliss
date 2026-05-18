@@ -1,9 +1,11 @@
 import Diferenciais from "@/components/Diferenciais";
-import DomeGallery from "@/components/DomeGallery";
+import EmblaGallery from "@/components/EmblaGallery";
 import FadeInWhenVisible from "@/components/FadeInWhenVisible";
 import Navbar from "@/components/Navbar";
+import { gtmPush } from "@/lib/gtm";
 import { motion } from "framer-motion";
-import { Briefcase, GraduationCap, Instagram } from "lucide-react";
+import { Briefcase, GraduationCap, Instagram, MessageCircle } from "lucide-react";
+import { useEffect } from "react";
 
 
 const GOLD     = "#C5A059";
@@ -12,11 +14,17 @@ const CHARCOAL = "#2A2A2A";
 const WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER ?? "";
 
 export default function Formatura() {
-  const openWA = () =>
+  useEffect(() => {
+    gtmPush("page_view", { page: "formatura" });
+  }, []);
+
+  const openWA = (location = "unknown") => {
+    gtmPush("whatsapp_click", { location, message: "Quero saber mais sobre formaturas!" });
     window.open(
       `https://wa.me/${WHATSAPP}?text=Quero saber mais sobre formaturas!`,
       "_blank"
     );
+  };
 
   return (
     <div
@@ -27,11 +35,12 @@ export default function Formatura() {
       <Navbar theme="light" />
 
       {/* ════════════ HERO — PEARL LUXURY ══════════════════════════════════════ */}
+      {/* min-h-screen permite que as thumbs respirem sem serem cortadas */}
       <section
-        className="relative w-screen h-screen flex flex-col items-center overflow-hidden"
+        className="relative w-full min-h-screen flex flex-col items-center"
         style={{ backgroundColor: LINEN }}
       >
-        {/* Névoa dourada quente — spot de joalheria */}
+        {/* ─── Névoa dourada sutil ─── */}
         <div
           className="absolute inset-0 pointer-events-none z-0"
           style={{
@@ -40,17 +49,16 @@ export default function Formatura() {
           }}
         />
 
-        {/* ─── Texto ─── */}
-        <div className="relative z-20 pt-24 sm:pt-40 px-8 sm:px-20 text-center pointer-events-none">
+        {/* ─── Título — padding-top limpa a navbar absoluta (~96px) ─── */}
+        <div className="relative z-20 pt-24 sm:pt-28 pb-4 px-8 sm:px-20 text-center pointer-events-none">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
           >
-            {/* Título editorial */}
             <h1
-              className="font-cormorant tracking-[-0.02em] leading-[0.9] sm:mb-8 uppercase"
-              style={{ fontSize: "clamp(3rem, 9.5vw, 8rem)" }}
+              className="font-cormorant tracking-[-0.02em] leading-[0.9] uppercase"
+              style={{ fontSize: "clamp(2.6rem, 7vw, 6rem)" }}
             >
               <span
                 className="block not-italic font-semibold mb-1"
@@ -65,69 +73,69 @@ export default function Formatura() {
                 são Eternas.
               </span>
             </h1>
+
+            {/* Subtítulo */}
+            <p
+              className="font-inter font-light mt-5 mx-auto"
+              style={{
+                fontSize: "clamp(0.78rem, 1.6vw, 1rem)",
+                color: "#9A9087",
+                letterSpacing: "0.06em",
+                lineHeight: 1.75,
+                maxWidth: "34rem",
+              }}
+            >
+              Viva a experiência única da sua formatura com a excelência que você merece.
+            </p>
           </motion.div>
         </div>
 
-        {/* ══ DomeGallery Mobile (≤ lg) ══════════════════════════════════════*/}
-        <div className="lg:hidden relative w-full flex-1 min-h-[45vh] -mt-24 z-10">
-          <DomeGallery
-            fit={0.9}
-            minRadius={360}
-            maxVerticalRotationDeg={0}
-            segments={24}
-            dragDampening={3.5}
-            overlayBlurColor={LINEN}
-            grayscale={false}
-          />
-
-          {/* Névoa topo — gradiente sem transform, direção `to bottom` */}
-          <div
-            className="dome-fog absolute inset-x-0 top-0 pointer-events-none z-[30]"
-            style={{
-              height: "300px",
-              background: `linear-gradient(to bottom, ${LINEN} 10%, ${LINEN} 65%, transparent 100%)`,
-            }}
-          />
-
-          {/* Névoa base — espelho simétrico */}
-          <div
-            className="dome-fog absolute inset-x-0 bottom-0 pointer-events-none z-[30]"
-            style={{
-              height: "300px",
-              background: `linear-gradient(to top, ${LINEN} 0%, ${LINEN} 65%, transparent 100%)`,
-            }}
-          />
+        {/* ─── Carrosel — cresce livremente, empurra o restante para baixo ─── */}
+        <div className="relative w-full z-10 pb-10 sm:pb-6">
+          <EmblaGallery />
         </div>
 
-        {/* ─── DomeGallery Desktop (≥ lg) — maior, mais próximo do texto ─── */}
-        <div className="hidden lg:block relative w-full h-full mb-8 -mt-8 z-10">
-          <DomeGallery
-            fit={1.45}
-            minRadius={520}
-            maxVerticalRotationDeg={0}
-            segments={32}
-            dragDampening={4}
-            overlayBlurColor={LINEN}
-            grayscale={false}
-          />
-
-          {/* Névoa topo desktop */}
-          <div
-            className="dome-fog absolute inset-x-0 top-0 pointer-events-none z-[30]"
+        {/* ─── CTAs ─────────────────────────────────────────────────────────── */}
+        <div className="relative z-20 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full px-6 pb-10 sm:pb-14">
+          {/* Botão 1 — WhatsApp */}
+          <button
+            onClick={() => openWA("hero_cta")}
+            className="flex items-center justify-center gap-2 w-full sm:w-auto h-12 px-8 rounded-full font-inter font-semibold text-[13px] uppercase tracking-[0.18em] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_12px_40px_-8px_rgba(37,211,102,0.35)]"
             style={{
-              height: "200px",
-              background: `linear-gradient(to bottom, ${LINEN} 5%, transparent 100%)`,
+              backgroundColor: "#25D366",
+              color: "#fff",
+              border: "none",
+              cursor: "pointer",
+              minWidth: "200px",
             }}
-          />
+          >
+            <MessageCircle size={16} strokeWidth={2.2} />
+            Falar no WhatsApp
+          </button>
 
-          {/* Névoa base desktop */}
-          <div
-            className="dome-fog absolute inset-x-0 bottom-0 pointer-events-none z-[30]"
+          {/* Botão 2 — Orçamento (outline) */}
+          <a
+            href="#orcamento"
+            onClick={() => gtmPush("cta_click", { cta_label: "Solicitar Orçamento", cta_location: "hero" })}
+            className="flex items-center justify-center w-full sm:w-auto h-12 px-8 rounded-full font-inter font-semibold text-[13px] uppercase tracking-[0.18em] transition-all duration-300 hover:scale-[1.03]"
             style={{
-              height: "200px",
-              background: `linear-gradient(to top, ${LINEN} 5%, transparent 100%)`,
+              border: `1.5px solid ${GOLD}`,
+              color: GOLD,
+              textDecoration: "none",
+              minWidth: "200px",
+              background: "transparent",
             }}
-          />
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = GOLD;
+              (e.currentTarget as HTMLElement).style.color = "#1A1A1A";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+              (e.currentTarget as HTMLElement).style.color = GOLD;
+            }}
+          >
+            Solicitar Orçamento
+          </a>
         </div>
       </section>
 
@@ -136,7 +144,7 @@ export default function Formatura() {
 
       {/* ════════════ CTA — LEGADO ════════════════════════════════════════════ */}
       <section
-        className="relative py-24 sm:py-24 px-8 text-center overflow-hidden"
+        className="flex justify-center relative py-24 sm:py-24 px-8 text-center items-center overflow-hidden"
         style={{ backgroundColor: LINEN }}
       >
         {/* Névoa muito sutil no centro */}
@@ -193,7 +201,7 @@ export default function Formatura() {
           {/* ── Botão Liquid Fill ── */}
           <div className="flex flex-col items-center gap-6">
             <button
-              onClick={openWA}
+              onClick={() => openWA("cta_iniciar_planejamento")}
               className={[
                 "group relative overflow-hidden",
                 "h-14 px-14",
@@ -223,7 +231,7 @@ export default function Formatura() {
             </button>
 
             <button
-              onClick={openWA}
+              onClick={() => openWA("cta_consultoria_exclusiva")}
               className="font-inter font-light uppercase transition-colors"
               style={{
                 fontSize: "10px",
@@ -285,7 +293,7 @@ export default function Formatura() {
           {/* Marca Registrada e Copyright */}
           <div className="flex flex-col items-center gap-2">
             <p className="text-xs tracking-widest uppercase text-slate-400">
-              © {new Date().getFullYear()} Forma Eventos — Todos os direitos reservados.
+              © {new Date().getFullYear()} Forma Eventos
             </p>
           </div>
 

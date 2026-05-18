@@ -4,36 +4,32 @@ import { useEffect, useState } from "react";
 const COLORS = {
   BG: "#FFFFFF",
   TEAL: "#26C2B9",
+  TRACK: "#E8E8E8",
 };
 
 export default function SplashScreen() {
-  const { isLoading } = useGlobalLoading();
+  const { isLoading, progress } = useGlobalLoading();
   const [isVisible, setIsVisible] = useState(true);
 
-  // CRITICAL: Lock scroll when loading
+  // Lock scroll while loading
   useEffect(() => {
     if (isLoading) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
     } else {
-      // CRITICAL: Unlock immediately and completely when loading ends
       document.body.style.overflow = "unset";
       document.documentElement.style.overflow = "unset";
     }
   }, [isLoading]);
 
-  // Handle fade-out and DOM removal
   const handleTransitionEnd = () => {
     if (!isLoading) {
-      // CRITICAL: Remove from DOM completely
       setIsVisible(false);
-      // Force unlock
       document.body.style.overflow = "unset";
       document.documentElement.style.overflow = "unset";
     }
   };
 
-  // Don't render at all if not visible
   if (!isVisible) return null;
 
   return (
@@ -44,18 +40,12 @@ export default function SplashScreen() {
       style={{ backgroundColor: COLORS.BG }}
       onTransitionEnd={handleTransitionEnd}
     >
-      {/* Logo Only - Breath Animation */}
       <div className="flex flex-col items-center gap-4">
         <style>{`
           @keyframes breath-gentle {
-            0%, 100% {
-              opacity: 1;
-            }
-            50% {
-              opacity: 0.4;
-            }
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.4; }
           }
-
           .logo-breathing {
             animation: breath-gentle 2.5s ease-in-out infinite;
           }
@@ -67,12 +57,29 @@ export default function SplashScreen() {
           className="logo-breathing w-56 h-24 object-contain"
         />
 
-        <p
-          className="text-xs font-light tracking-wider uppercase mt-4"
-          style={{ color: COLORS.TEAL }}
-        >
-          Carregando...
-        </p>
+        {/* Progress bar */}
+        <div className="w-44 mt-2 flex flex-col items-center gap-2">
+          <div
+            className="w-full h-[2px] rounded-full overflow-hidden"
+            style={{ backgroundColor: COLORS.TRACK }}
+          >
+            <div
+              className="h-full rounded-full"
+              style={{
+                width: `${progress}%`,
+                backgroundColor: COLORS.TEAL,
+                transition: "width 250ms ease-out",
+              }}
+            />
+          </div>
+
+          <p
+            className="text-xs font-light tracking-wider uppercase tabular-nums"
+            style={{ color: COLORS.TEAL }}
+          >
+            {progress < 100 ? `${progress}%` : "Pronto"}
+          </p>
+        </div>
       </div>
     </div>
   );

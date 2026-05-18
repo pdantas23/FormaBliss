@@ -4,14 +4,23 @@
 // PATCH /:id → protegido (comercial|marketing), atualiza estágio do lead
 
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import { createSupabaseAdminClient } from "../lib/supabase";
 import { DB_TABLES, TIPO_EVENTO_VALUES, LEAD_ESTAGIO_VALUES } from "../../shared/const";
 import { requireAuth } from "../middlewares/requireAuth";
 
+const submitLeadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Muitas tentativas. Aguarde alguns minutos e tente novamente." },
+});
+
 const router = Router();
 
 // ─── POST / — criar lead (público) ──────────────────────────────────────────
-router.post("/", async (req, res) => {
+router.post("/", submitLeadLimiter, async (req, res) => {
   const { nome, email, telefone, tipo, mensagem } = req.body;
 
   if (!nome || !email || !telefone || !tipo) {
@@ -102,7 +111,7 @@ router.patch("/:id", requireAuth(["comercial"]), async (req, res) => {
   const { data, error } = await supabase
     .from(DB_TABLES.LEADS)
     .update({ estagio })
-    .eq("id", parseInt(id, 10))
+    .eq("id", parseInt(id as string, 10))
     .select()
     .single();
 
