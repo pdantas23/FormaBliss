@@ -1,6 +1,7 @@
+import { plataformaDoLead } from "@/features/comercial/plataformas";
 import type { Lead } from "@shared/const";
-import { MessageCircle } from "lucide-react";
 import { useEffect } from "react";
+import { SiWhatsapp } from "react-icons/si";
 
 const COLORS = {
   BG_ULTRA_DARK: "#0B0819",
@@ -57,6 +58,7 @@ export default function LeadModal({ lead, onClose }: LeadModalProps) {
 
   if (!lead) return null;
 
+  const plataforma = plataformaDoLead(lead.origem);
   const tipoStyle = TAG_STYLES[lead.tipo_evento as keyof typeof TAG_STYLES] || TAG_STYLES.outros;
   const estagioStyle = ESTAGIO_COLORS[lead.estagio as keyof typeof ESTAGIO_COLORS] || ESTAGIO_COLORS.novo;
 
@@ -115,7 +117,7 @@ export default function LeadModal({ lead, onClose }: LeadModalProps) {
                 className="inline-flex items-center gap-2 px-3 py-2 rounded-lg transition hover:opacity-70"
                 style={{ backgroundColor: "green", color: COLORS.TEXT_PRIMARY }}
               >
-                <MessageCircle className="h-4 w-4" />
+                <SiWhatsapp size={16} aria-hidden />
                 <span className="text-sm font-medium">{lead.telefone}</span>
               </a>
             </div>
@@ -180,19 +182,26 @@ export default function LeadModal({ lead, onClose }: LeadModalProps) {
             </div>
           )}
 
-          {/* Origem */}
-          {lead.origem && (
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{ color: COLORS.TEAL }}>
-                Origem
-              </p>
+          {/* Origem — a plataforma vem primeiro, a URL crua fica de prova */}
+          <div>
+            <p className="text-xs font-medium uppercase tracking-wider mb-2" style={{ color: COLORS.TEAL }}>
+              Origem
+            </p>
+            <div className="flex items-center gap-2">
+              <plataforma.Icon size={16} color={plataforma.cor} aria-hidden />
+              <span className="text-sm font-medium" style={{ color: COLORS.PURPLE }}>
+                {plataforma.label}
+              </span>
+            </div>
+            {lead.origem && (
               <p
-                style={{ color: COLORS.PURPLE, fontSize: "0.85rem", wordBreak: "break-all" }}
+                className="mt-1.5"
+                style={{ color: COLORS.PURPLE, opacity: 0.55, fontSize: "0.75rem", wordBreak: "break-all" }}
               >
                 {lead.origem}
               </p>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Footer */}
